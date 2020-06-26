@@ -17,14 +17,12 @@ function characterList() {
     var characters = response;
     characters.forEach(el => {
       var element = '<div class="col m4 s12" style="border: 5px solid transparent;" id="' + el.char_id + '">';
-      element += '<a href="#charModal" class="modal-trigger"><div class="card-panel filter z-depth-4" style="height: 300px; border-radius: 10px; background-image: url(' + el.img + '); background-size: cover; backdrop-filter: blur(50px);"><section style="backdrop-filter: blur(10px); top:70px"><h5 class="white-text text-darken-2" style="font-weight: 700">' + el.name + '</h5></section></div></a></div>';
+      element += '<a data-char="' + el.char_id + '" onclick="charModal(this)"><div class="card-panel filter z-depth-4" style="height: 300px; border-radius: 10px; background-image: url(' + el.img + '); background-size: cover; backdrop-filter: blur(50px);"><section style="backdrop-filter: blur(10px); top:70px"><h5 class="white-text text-darken-2" style="font-weight: 700">' + el.name + '</h5></section></div></a></div>';
       $("#list").append(element);
 
       // modal time
-
       /*
       var modalElement = '<div id="modal'+el.char_id+'" class="modal z-depth-4" style="border-radius: 15px;"><div class="modal-content"><h4>'+el.name+'</h4><p>A bunch of text</p></div></div>'
-
       $('#modalList').append(modalElement);*/
 
     });
@@ -68,4 +66,25 @@ function specificChar() {
 
   });
 
+}
+
+function charModal(d) {
+  $("#charModal").modal('open');
+  $('#charModal').empty();
+  var characterID = $(d).data('char');
+  var settings = {
+    "url": "https://www.breakingbadapi.com/api/characters/" + characterID,
+    "method": "GET",
+    "timeout": 0,
+  };
+
+  $.ajax(settings).done(function (response) {
+    //console.log(response);
+    const specificChar = response[0];
+
+    let element = '<div class="modal-content row"><div class="col s6"><h4>' + specificChar.name + '</h4><p><u>Birthday</u>: ' + specificChar.birthday + '<br><u>Occupation</u>: ' + specificChar.occupation + '<br><u>Nickname</u>: ' + specificChar.nickname + '<br><u>Status</u>: ' + specificChar.status + '<br><br><u>Portrayed by</u>: ' + specificChar.portrayed + '<br><u>Seasons</u>: ' + specificChar.appearance + '</p></div><div class="col s6"><img src="'+ specificChar.img + '" style="width:auto; height:250px;"></div></div>';
+    $('#charModal').append(element);
+
+
+  });
 }
