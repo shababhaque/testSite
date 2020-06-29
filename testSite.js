@@ -1,4 +1,20 @@
 $(document).ready(function () {
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAwWNbvEj58gkX7YuSuHcy51FcFT0ji1i0",
+    authDomain: "breakingbad-3d014.firebaseapp.com",
+    databaseURL: "https://breakingbad-3d014.firebaseio.com",
+    projectId: "breakingbad-3d014",
+    storageBucket: "breakingbad-3d014.appspot.com",
+    messagingSenderId: "231388540413",
+    appId: "1:231388540413:web:ec9488b391bfb8ccc47d94",
+    measurementId: "G-0K2N5ZJ4PC"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  writeCharactersToFirebase();
+
   characterList();
   specificChar();
 });
@@ -31,9 +47,9 @@ function characterList() {
 }
 
 function specificChar() {
-  /*$(".col").click( function(event){
-    console.log(event);
-  });*/
+  //$(".col").click( function(event){
+  //  console.log(event);
+  //});
 
   let charID = null
   $("#list").on('click', '.col', function (event) {
@@ -82,9 +98,40 @@ function charModal(d) {
     //console.log(response);
     const specificChar = response[0];
 
-    let element = '<div class="modal-content row"><div class="col s6"><h4>' + specificChar.name + '</h4><p><u>Birthday</u>: ' + specificChar.birthday + '<br><u>Occupation</u>: ' + specificChar.occupation + '<br><u>Nickname</u>: ' + specificChar.nickname + '<br><u>Status</u>: ' + specificChar.status + '<br><br><u>Portrayed by</u>: ' + specificChar.portrayed + '<br><u>Seasons</u>: ' + specificChar.appearance + '</p></div><div class="col s6"><img src="'+ specificChar.img + '" style="width:auto; height:250px;"></div></div>';
+    let element = '<div class="modal-content row"><div class="col s6"><h4>' + specificChar.name + '</h4><p><u>Birthday</u>: ' + specificChar.birthday + '<br><u>Occupation</u>: ' + specificChar.occupation + '<br><u>Nickname</u>: ' + specificChar.nickname + '<br><u>Status</u>: ' + specificChar.status + '<br><br><u>Portrayed by</u>: ' + specificChar.portrayed + '<br><u>Seasons</u>: ' + specificChar.appearance + '</p></div><div class="col s6"><img src="' + specificChar.img + '" style="width:auto; height:250px;"></div></div>';
     $('#charModal').append(element);
 
 
   });
+}
+
+function writeCharactersToFirebase() {
+  let database = firebase.database();
+  //let ref = database.ref('list');
+
+  var settings = {
+    "url": "https://www.breakingbadapi.com/api/characters/",
+    "method": "GET",
+    "timeout": 0,
+  };
+
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+
+    response.forEach(character => {
+      /*let data = {
+        name: character.name,
+        id: character.char_id,
+        img: [character.img]
+      };
+      ref.push(data);*/
+
+      firebase.database().ref('characters/').set({
+          name: character.name,
+          id: character.char_id,
+          img: [character.img]
+      });
+
+  });
+});
 }
