@@ -1,18 +1,5 @@
 $(document).ready(function () {
   // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyAwWNbvEj58gkX7YuSuHcy51FcFT0ji1i0",
-    authDomain: "breakingbad-3d014.firebaseapp.com",
-    databaseURL: "https://breakingbad-3d014.firebaseio.com",
-    projectId: "breakingbad-3d014",
-    storageBucket: "breakingbad-3d014.appspot.com",
-    messagingSenderId: "231388540413",
-    appId: "1:231388540413:web:ec9488b391bfb8ccc47d94",
-    measurementId: "G-0K2N5ZJ4PC"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
   writeCharactersToFirebase();
 
   characterList();
@@ -20,7 +7,7 @@ $(document).ready(function () {
 });
 
 function characterList() {
-  var settings = {
+  /*var settings = {
     "url": "https://www.breakingbadapi.com/api/characters",
     "method": "GET",
     "timeout": 0,
@@ -37,12 +24,28 @@ function characterList() {
       $("#list").append(element);
 
       // modal time
-      /*
+      
       var modalElement = '<div id="modal'+el.char_id+'" class="modal z-depth-4" style="border-radius: 15px;"><div class="modal-content"><h4>'+el.name+'</h4><p>A bunch of text</p></div></div>'
-      $('#modalList').append(modalElement);*/
+      $('#modalList').append(modalElement);
 
     });
 
+  });*/
+  db.collection("characters")
+  .get()
+  .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          var name = doc.id;
+          var el = doc.data();
+          var element = '<div class="col m4 s12" style="border: 5px solid transparent;" id="' + el.char_id + '">';
+      element += '<a data-char="' + name + '" onclick="charModal(this)"><div class="card-panel filter z-depth-4" style="height: 300px; border-radius: 10px; background-image: url(' + el.img + '); background-size: cover; backdrop-filter: blur(50px);"><section style="backdrop-filter: blur(10px); top:70px"><h5 class="white-text text-darken-2" style="font-weight: 700">' + name + '</h5></section></div></a></div>';
+      $("#list").append(element);
+      });
+  })
+  .catch(function(error) {
+      console.log("Error getting documents: ", error);
   });
 }
 
@@ -55,8 +58,22 @@ function specificChar() {
   $("#list").on('click', '.col', function (event) {
     charID = $(this).attr('id');
     console.log(charID);
+    db.collection("characters").doc(charID).get().then(function(doc){
+      let character = doc.data();
+      console.log(character);
 
 
+      var element = '<div><h5>' + doc.id + '</h5>';
+      element += '<img src="' + character.img + '">'
+      element += '<p>Birthday: ' + character.birthday;
+      element += '<br>Occupation: ' + character.occupation;
+      element += '<br>Nickname: ' + character.nickname;
+      element += '<br>Status: ' + character.status + '</p></div>';
+      //console.log(element);
+      $('#singleChar').append(element);
+    });
+
+    /*
     var settings = {
       "url": "https://www.breakingbadapi.com/api/characters/" + charID,
       "method": "GET",
@@ -78,7 +95,7 @@ function specificChar() {
       $('#singleChar').append(element);
 
 
-    });
+    });*/
 
   });
 
@@ -106,32 +123,6 @@ function charModal(d) {
 }
 
 function writeCharactersToFirebase() {
-  let database = firebase.database();
+  //let database = firebase.database();
   //let ref = database.ref('list');
-
-  var settings = {
-    "url": "https://www.breakingbadapi.com/api/characters/",
-    "method": "GET",
-    "timeout": 0,
-  };
-
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-
-    response.forEach(character => {
-      /*let data = {
-        name: character.name,
-        id: character.char_id,
-        img: [character.img]
-      };
-      ref.push(data);*/
-
-      firebase.database().ref('characters/').set({
-          name: character.name,
-          id: character.char_id,
-          img: [character.img]
-      });
-
-  });
-});
 }

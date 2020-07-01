@@ -61,14 +61,33 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" type="text/javascript"></script>
 <script type="text/javascript" src="materialize.min.js"></script>
-<script src="init.js"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAwWNbvEj58gkX7YuSuHcy51FcFT0ji1i0",
+    authDomain: "breakingbad-3d014.firebaseapp.com",
+    databaseURL: "https://breakingbad-3d014.firebaseio.com",
+    projectId: "breakingbad-3d014",
+    storageBucket: "breakingbad-3d014.appspot.com",
+    messagingSenderId: "231388540413",
+    appId: "1:231388540413:web:ec9488b391bfb8ccc47d94",
+    measurementId: "G-0K2N5ZJ4PC"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+</script>
+
+<script src="init.js"></script>
+
 
 
 <script src="testSite.js"></script>
